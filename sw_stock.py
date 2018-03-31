@@ -60,7 +60,7 @@ class Stock:
                 sdf = study.to_dataframe(stock)
                 if hdf is None: continue
                 if sdf is None: continue
-                #if not hdf.iloc[-1]['close'] > sdf.iloc[-1]['ma_50']: continue
+                if not hdf.iloc[-1]['close'] > sdf.iloc[-1]['ma_50']: continue
                 if not sdf.iloc[-1]['ma_50'] > sdf.iloc[-1]['ma_200']: continue
                 selected.append(stock)
             with open(fname, 'w') as f:
