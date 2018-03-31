@@ -1,0 +1,5 @@
+PATH_STOCKS = '../data/stock/stocks.csv'
+FORMAT_SELECTED = '../data/stock/selected_{}.csv'
+FORMAT_HISTORY = '../data/history/daily_{}.csv'
+FORMAT_STUDY = '../data/study/study_{}.csv'
+STOCK_A = 'AAPL'
