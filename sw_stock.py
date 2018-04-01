@@ -40,10 +40,15 @@ class Stock:
         else:
             return self._stocks[:]
 
-    def selected(self, avail_days, check_days, check_volume, check_price=None, history=None):
-        fname = self._format_selected.format('{}_{}_{}_{}'.format(avail_days, check_days, check_volume, check_price))
-        if history is not None:
-            selected = history.select(self.stocks(), avail_days, check_days, check_volume, check_price)
+    def select(self, selection_name, stock_filter=None, stocks=None):
+        fname = self._format_selected.format(selection_name)
+        if stock_filter is not None:
+            if stocks is None:
+                stocks = self.stocks()
+            selected = []
+            for stock in stocks:
+                if stock_filter(stock):
+                    selected.append(stock)
             with open(fname, 'w') as f:
                 for s in selected:
                     f.write(s + '\n')

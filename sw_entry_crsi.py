@@ -18,7 +18,6 @@ class Entry:
         self.X = X
         self.Y = Y
         self.Z = Z
-        pass
 
     def entry(self, history_df, study_df, pre_entry_date, test=False):
         hdf = history_df

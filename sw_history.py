@@ -91,25 +91,6 @@ class History:
                 print(error)
         print('done updating history !!!')
 
-    # avail_days - days at least available
-    # check_days - days to check
-    # check_volume - min volume to check
-    # check_price - min close price to check
-    def select(self, stocks, avail_days, check_days, check_volume, check_price=None):
-        selected = []
-        df = self.to_dataframe(self._stock_a)
-        ix_avail_stock_a = list(df.index[-avail_days:])
-        for stock in stocks:
-            df = self.to_dataframe(stock)
-            if df is None: continue
-            if len(df) < avail_days: continue
-            ix_avail = list(df.index[-avail_days:])
-            if ix_avail != ix_avail_stock_a: continue
-            if min(df.iloc[-check_days:]['volume'].values) < check_volume: continue
-            if check_price is not None and min(df.iloc[-check_days:]['close'].values) < check_price: continue
-            selected.append(stock)
-        return selected
-
 # -------------------------------------------------------------------------------
 
 if __name__ == "__main__":
