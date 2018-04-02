@@ -46,13 +46,17 @@ while True:
 
     elif script == 3:
         # ---------------------------------------------------------------------------
-        # connors filter
+        # stats
         # ---------------------------------------------------------------------------
         stock = input('enter stock e.g. AAPL:')
-        stats = iex_api.stock_stats(stock)
-        if stats['success']:
-            for key in stats['data']:
-                print('{} : {}'.format(key, stats['data'][key]))
+        import sw_fundamentals
+        fundamentals = sw_fundamentals.Fundamentals()
+        stats = fundamentals.stats(stock)
+        if stats is not None:
+            for key in stats:
+                print('{} : {}'.format(key, stats[key]))
+        else:
+            print('No stats for this stock')
 
     elif script == 4:
         # ---------------------------------------------------------------------------
