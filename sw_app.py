@@ -15,7 +15,7 @@ while True:
     print('-' * 60)
     print('1 - history tail')
     print('2 - chart')
-    print('3 - stats')
+    print('3 - fundamentals')
     print('4 - select "connors filter" stocks')
     print('5 - select "rocket" stocks')
     print('6 - update ALL')
@@ -51,6 +51,22 @@ while True:
         stock = input('enter stock e.g. AAPL:')
         import sw_fundamentals
         fundamentals = sw_fundamentals.Fundamentals()
+        print('Financials:')
+        financials = fundamentals.financials(stock)
+        if financials is not None:
+            for i in range(len(financials)):
+                print('----- {} ----------'.format(i))
+                for key in financials[i]:
+                    print('{} : {}'.format(key, financials[i][key]))
+        else:
+            print('No financials for this stock')
+        print('Peers:')
+        peers = fundamentals.peers(stock)
+        if peers is not None:
+            print(' '.join(peers))
+        else:
+            print('No peers for this stock')
+        print('Stats:')
         stats = fundamentals.stats(stock)
         if stats is not None:
             for key in stats:

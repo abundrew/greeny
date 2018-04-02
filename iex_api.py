@@ -42,31 +42,34 @@ def stock_batch(symbols=None, types='ohlc', range='1m'):
     data = stock_api(endpoint)
     return data
 
-def stock_batch_100(types='ohlc', range='1m'):
+def stock_batch_100(symbols=None, types='ohlc', range='1m'):
     result = {}
-    symbols = stock_symbols()
-    if symbols['success']:
-        result['data'] = {}
-        lst_sym = []
-        for sym in symbols['data']:
-            lst_sym.append(sym['symbol'])
-            if len(lst_sym) == 100:
-                batch_100 = stock_batch(','.join(lst_sym), types, range)
-                if batch_100['success']:
-                    for k, v in batch_100['data'].items():
-                        result['data'][k] = v
-                lst_sym[:] = []
-        if len(lst_sym) > 0:
+    if symbols is None:
+        symbols = stock_symbols()
+        if symbols['success']:
+           symbols = [sym['symbol'] for sym in symbols['data']]
+        else:
+            result['data'] = None
+            result['success'] = False
+            result['error'] = symbols['error']
+            return result
+    result['data'] = {}
+    lst_sym = []
+    for sym in symbols:
+        lst_sym.append(sym)
+        if len(lst_sym) == 100:
             batch_100 = stock_batch(','.join(lst_sym), types, range)
             if batch_100['success']:
                 for k, v in batch_100['data'].items():
                     result['data'][k] = v
-        result['success'] = True
-        result['error'] = None
-    else:
-        result['data'] = None
-        result['success'] = False
-        result['error'] = symbols['error']
+            lst_sym[:] = []
+    if len(lst_sym) > 0:
+        batch_100 = stock_batch(','.join(lst_sym), types, range)
+        if batch_100['success']:
+            for k, v in batch_100['data'].items():
+                result['data'][k] = v
+    result['success'] = True
+    result['error'] = None
     return result
 
 def stock_book(symbol):
