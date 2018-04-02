@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import time
+import iex_api
 import sw_chart
 import sw_history
 import sw_setup
@@ -12,11 +13,14 @@ while True:
     print('=' * 60)
     print('SWING APP')
     print('-' * 60)
-    print('1 - chart')
-    print('2 - select "connors filter" stocks')
-    print('3 - update ALL')
-    print('4 - update "connors filter" stocks')
-    print('5 - setup CRSI')
+    print('1 - history tail')
+    print('2 - chart')
+    print('3 - stats')
+    print('4 - select "connors filter" stocks')
+    print('5 - select "rocket" stocks')
+    print('6 - update ALL')
+    print('7 - update "connors filter" stocks')
+    print('8 - setup CRSI')
     print('0 - exit')
     print('=' * 60)
     print('enter choice #', end=':')
@@ -26,20 +30,49 @@ while True:
 
     if script == 1:
         # ---------------------------------------------------------------------------
-        # setup CRSI
+        # history tail
+        # ---------------------------------------------------------------------------
+        stock = input('enter stock e.g. AAPL:')
+        history = sw_history.History()
+        hdf = history.to_dataframe(stock)
+        print(hdf.tail())
+
+    elif script == 2:
+        # ---------------------------------------------------------------------------
+        # chart
         # ---------------------------------------------------------------------------
         stock = input('enter stock e.g. AAPL:')
         sw_chart.chart(stock)
 
-    elif script == 2:
+    elif script == 3:
         # ---------------------------------------------------------------------------
-        # update
+        # connors filter
+        # ---------------------------------------------------------------------------
+        stock = input('enter stock e.g. AAPL:')
+        stats = iex_api.stock_stats(stock)
+        if stats['success']:
+            for key in stats['data']:
+                print('{} : {}'.format(key, stats['data'][key]))
+
+    elif script == 4:
+        # ---------------------------------------------------------------------------
+        # connors filter
         # ---------------------------------------------------------------------------
         stock = sw_stock.Stock()
         stock_filter = sw_stock_filter.StockFilter()
-        stock.select("connors_filter", stock_filter.connors_filter, stock.stocks())
+        selected = stock.select("connors_filter", stock_filter.connors_filter, stock.stocks())
+        print('Selected: {} {} {}'.format(len(selected), ' '.join(selected[:10]), '...' if len(selected) > 10 else ''))
 
-    elif script == 3 or script == 4:
+    elif script == 5:
+        # ---------------------------------------------------------------------------
+        # rocket filter
+        # ---------------------------------------------------------------------------
+        stock = sw_stock.Stock()
+        stock_filter = sw_stock_filter.StockFilter()
+        selected = stock.select("rocket", stock_filter.rocket_filter, stock.stocks())
+        print('Selected: {} {} {}'.format(len(selected), ' '.join(selected[:10]), '...' if len(selected) > 10 else ''))
+
+    elif script == 6 or script == 7:
         # ---------------------------------------------------------------------------
         # update
         # ---------------------------------------------------------------------------
@@ -47,11 +80,11 @@ while True:
         history = sw_history.History()
         study = sw_study.Study(history)
         setup = sw_setup.Setup(history, study)
-        selected = stock.stocks() if script == 1 else stock.select("connors_filter")
+        selected = stock.stocks() if script == 6 else stock.select("connors_filter")
         history.update(selected)
         study.update(selected)
 
-    elif script == 5:
+    elif script == 8:
         # ---------------------------------------------------------------------------
         # setup CRSI
         # ---------------------------------------------------------------------------
