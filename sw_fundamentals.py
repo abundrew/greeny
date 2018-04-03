@@ -9,6 +9,7 @@ import sw_stock
 
 class Fundamentals:
     def __init__(self,
+                 stocks=None,
                  path_financials=sw_config.PATH_FINANCIALS,
                  path_peers=sw_config.PATH_PEERS,
                  path_stats=sw_config.PATH_STATS):
@@ -18,19 +19,19 @@ class Fundamentals:
 
         fname = self._path_financials
         if not os.path.isfile(fname):
-            self.update()
+            self.update(stocks)
         with open(fname) as f:
             self._financials = json.load(f)
 
         fname = self._path_peers
         if not os.path.isfile(fname):
-            self.update()
+            self.update(stocks)
         with open(fname) as f:
             self._peers = json.load(f)
 
         fname = self._path_stats
         if not os.path.isfile(fname):
-            self.update()
+            self.update(stocks)
         with open(fname) as f:
             self._stats = json.load(f)
 
@@ -55,8 +56,10 @@ class Fundamentals:
             error = "ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1])
             print(error)
 
-    def update(self):
-        stocks = sw_stock.Stock()
+    def update(self, stocks=None):
+        if stocks is None:
+            stock = sw_stock.Stock()
+            stocks = stock.stocks()
         component = {'financials':self._path_financials, 'peers':self._path_peers, 'stats':self._path_stats}
         for key in component:
             fname = component[key]
