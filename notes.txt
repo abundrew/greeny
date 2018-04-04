@@ -1,0 +1,14 @@
+refactoring:
+1) av_api
+   => class
+   av_api_key - parameter
+   last_run_time
+   wait or pause or delay (2 sec)
+   combine av_api and iex_api in web_data_reader
+2) package "swing" or other name
+   rename files
+   combine classes
+   package for "clean" code
+   other stuff - modules
+
+   https://www.pythoncentral.io/how-to-create-a-python-package/
