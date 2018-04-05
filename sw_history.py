@@ -31,7 +31,7 @@ class History:
 
     # outputsize: full
     def download(self, stocks, skip_if_exists=True):
-        print('start downloading history...')
+        print('start downloading daily history...')
         if isinstance(stocks, str):
             stocks = [stocks]
         for stock in stocks:
@@ -51,7 +51,7 @@ class History:
             except:
                 error = "ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1])
                 print(error)
-        print('done downloading history !!!')
+        print('done downloading daily history !!!')
 
     # outputsize: compact
     def update(self, stocks):

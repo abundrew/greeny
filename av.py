@@ -2,25 +2,24 @@
 
 import json
 import pandas as pd
+import sys
 import time
-import urllib
+import urllib.request
 from urllib.parse import urlencode, quote_plus
-import av_api_key
+import config
 
 class DataReader:
-    def __init__(self, api_key=av_api_key.API_KEY, delay=2):
-        self._api_key = api_key
-        self._delay = delay
-        self._last_run_time = time.time() - 2
+    def __init__(self):
+        self._last_run_time = time.time() - config.AV_API_DELAY
 
     def _av_call(self, payload):
-        delay = self._delay - (time.time() - self._last_run_time)
+        delay = config.AV_API_DELAY - (time.time() - self._last_run_time)
         if delay > 0:
             time.sleep(delay)
         self._last_run_time = time.time()
         result = {}
         try:
-            payload['apikey'] = self._api_key
+            payload['apikey'] = config.AV_API_KEY
             url = 'https://www.alphavantage.co/query?{}'
             url = url.format(urlencode(payload, quote_via=quote_plus))
             headers = {}
@@ -179,7 +178,7 @@ class DataReader:
             data['data'] = df
         return data
 
-    # relative strength index (ADX)
+    # relative strength index (RSI)
     # interval: 1min, 5min, 15min, 30min, 60min, daily, weekly, monthly
     # time_period: number of data points used to calculate each RSI value
     def RSI(self, symbol, interval='daily', time_period=14, series_type='close'):
@@ -212,38 +211,32 @@ if __name__ == "__main__":
     try:
         reader = DataReader()
         data = reader.time_series_daily('AAPL')
-        print(time.strftime('TIME SERIES DAILY AAPL %Y-%m-%d %H:%M:%S ...', time.localtime()))
+        print(time.strftime('%Y-%m-%d %H:%M:%S TIME SERIES DAILY AAPL ...', time.localtime()))
         if data['success']:
             print(data['data'].tail())
         else:
-            print('ERROR:')
-            print(data['error'])
+            print('ERROR {}:'.format(data['error']))
         print('-' * 80)
         data = reader.SMA('SMA','daily', 200, 'close')
-        print(time.strftime('SMA AAPL %Y-%m-%d %H:%M:%S ...', time.localtime()))
+        print(time.strftime('%Y-%m-%d %H:%M:%S SMA AAPL ...', time.localtime()))
         if data['success']:
             print(data['data'])
         else:
-            print('ERROR:')
-            print(data['error'])
+            print('ERROR {}:'.format(data['error']))
         print('-' * 80)
         data = reader.RSI('AAPL')
-        print(time.strftime('RSI AAPL %Y-%m-%d %H:%M:%S ...', time.localtime()))
+        print(time.strftime('%Y-%m-%d %H:%M:%S RSI AAPL ...', time.localtime()))
         if data['success']:
             print(data['data'].tail())
         else:
-            print('ERROR:')
-            print(data['error'])
+            print('ERROR {}:'.format(data['error']))
         print('-' * 80)
         data = reader.sector()
-        print(time.strftime('SECTOR %Y-%m-%d %H:%M:%S ...', time.localtime()))
+        print(time.strftime('%Y-%m-%d %H:%M:%S SECTOR ...', time.localtime()))
         if data['success']:
             print(data['data'])
         else:
-            print('ERROR:')
-            print(data['error'])
+            print('ERROR {}:'.format(data['error']))
     except:
-        import sys
-        error = "ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1])
-        print(error)
+        print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
     print('-' * 80)

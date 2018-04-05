@@ -1,6 +1,7 @@
 #!/bin/python3
 
 import json
+import sys
 import urllib.request
 
 class DataReader:
@@ -160,13 +161,11 @@ if __name__ == "__main__":
         reader = DataReader()
         data = reader.stock_stats('AAPL')
         if data['success']:
-            print('STATS AAPL')
+            print('STATS AAPL ...')
             for key in data['data']:
                 print('{} : {}'.format(key, data['data'][key]))
         else:
             print('ERROR: {}'.format(data['error']))
     except:
-        import sys
-        error = "ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1])
-        print(error)
+        print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
     print('-' * 80)
