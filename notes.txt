@@ -12,3 +12,8 @@ refactoring:
    other stuff - modules
 
    https://www.pythoncentral.io/how-to-create-a-python-package/
+
+greeny
+- av (DataReader)
+- iex (DataReader)
+- basis (?)

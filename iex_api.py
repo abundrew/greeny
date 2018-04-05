@@ -24,16 +24,13 @@ def stock_api(endpoint):
 
     return result
 
-bad_symbols = ['ATAX', 'BIL', 'CLGN', 'SHV', 'TMSR']
-
 def stock_symbols():
     endpoint = "ref-data/symbols"
     data = stock_api(endpoint)
     if data['success']:
         data['data'] = [x for x in data['data'] if
                         x['type'] in ['cs', 'et'] and
-                        x['isEnabled'] and
-                        not x['symbol'] in bad_symbols]
+                        x['isEnabled']]
     return data
 
 def stock_batch(symbols=None, types='ohlc', range='1m'):
