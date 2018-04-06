@@ -15,16 +15,13 @@ refactoring:
 
 greeny
 - config
-- calcs (RSI, updown_streak, RSI_streak, percent_rank, Connors_RSI, Wilders_MA, ADX)
-- tools (chart)
+- calcs.RSI(), calcs.updown_streak(), calcs.RSI_streak(), calcs.percent_rank(),
+  calcs.Connors_RSI(), calcs.Wilders_MA(), calcs.ADX()
+- tools.chart()
 - av.DataReader
 - iex.DataReader
-- daily.History
-- daily.Study
-
-- stock.Symbol
-- stock.Fundamentals
-- stock.Stock
+- daily.History, daily.Study
+- stock.Symbol, stock.Fundamentals, stock.Stock
 
 - trade.Research
 - app_greeny

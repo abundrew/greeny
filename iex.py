@@ -37,25 +37,25 @@ class DataReader:
             data['data'] = [x for x in data['data'] if x['type'] in ['cs', 'et'] and x['isEnabled']]
         return data
 
-    def _stock_batch(self, symbols, types='ohlc', range='1m'):
+    def stock_batch(self, symbols, types='ohlc', range='1m'):
         endpoint = "stock/market/batch?symbols={}&types={}&range={}".format(','.join(symbols), types, range)
         data = self._stock_api(endpoint)
         return data
 
-    def _stock_batch_100(self, symbols, types='ohlc', range='1m'):
+    def stock_batch_100(self, symbols, types='ohlc', range='1m'):
         result = {}
         result['data'] = {}
         lst_sym = []
         for sym in symbols:
             lst_sym.append(sym)
             if len(lst_sym) == 100:
-                batch_100 = self._stock_batch(lst_sym, types, range)
+                batch_100 = self.stock_batch(lst_sym, types, range)
                 if batch_100['success']:
                     for k, v in batch_100['data'].items():
                         result['data'][k] = v
                 lst_sym[:] = []
         if len(lst_sym) > 0:
-            batch_100 = self._stock_batch(lst_sym, types, range)
+            batch_100 = self.stock_batch(lst_sym, types, range)
             if batch_100['success']:
                 for k, v in batch_100['data'].items():
                     result['data'][k] = v
