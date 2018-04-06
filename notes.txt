@@ -1,27 +1,42 @@
-refactoring:
-1) av_api
-   => class
-   av_api_key - parameter
-   last_run_time
-   wait or pause or delay (2 sec)
-   combine av_api and iex_api in web_data_reader
-2) package "swing" or other name
-   rename files
-   combine classes
-   package for "clean" code
-   other stuff - modules
-
-   https://www.pythoncentral.io/how-to-create-a-python-package/
-
 greeny
-- config
-- calcs.RSI(), calcs.updown_streak(), calcs.RSI_streak(), calcs.percent_rank(),
-  calcs.Connors_RSI(), calcs.Wilders_MA(), calcs.ADX()
-- tools.chart()
-- av.DataReader
-- iex.DataReader
-- daily.History, daily.Study
-- stock.Symbol, stock.Selection, stock.Fundamentals, stock.Stock
 
-- trade.Research
-- app_greeny
+- config
+    AV_API_...
+    FORMAT_...
+    PATH_...
+
+- calcs
+    RSI()
+    updown_streak()
+    RSI_streak()
+    percent_rank()
+    Connors_RSI()
+    Wilders_MA()
+    ADX()
+
+- tools
+    chart()
+
+- av
+    DataReader
+
+- iex
+    DataReader
+
+- daily
+    History
+    Study
+
+- stock
+    Symbol
+    Selection
+    Fundamentals
+    Stock
+
+- trade
+- research
+- entry
+- exit
+- test
+
+- greeny
