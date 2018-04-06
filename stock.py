@@ -43,17 +43,106 @@ class Symbol:
         elif selection == 'NASDAQ':
             return self._symbols_nasdaq[:]
         else:
+            return Selection().select(selection)
+
+class Selection:
+    def __init__(self):
+        pass
+
+    def select(self, selections):
+        if isinstance(selections, str):
+            selections = [selections]
+        interselected = Symbol().symbols()
+        for selection in selections:
             fname = config.FORMAT_SYMBOLS.format(selection)
-            if not os.path.isfile(fname): return None
+            if not os.path.isfile(fname): continue
             with open(fname, 'r') as f:
                 selected = [line.rstrip('\n') for line in f]
-            return selected
+            interselected = list(set(interselected) & set(selected))
+        interselected.sort()
+        return interselected
 
-    def save_selection(self, selection, symbols):
+    def save(self, selection, symbols):
         fname = config.FORMAT_SYMBOLS.format(selection)
         with open(fname, 'w') as f:
             for symbol in symbols:
                 f.write(symbol + '\n')
+
+    def update(self):
+        print('-----> updating selection ...')
+        symbols = Symbol().symbols()
+        history = daily.History()
+        study = daily.Study()
+
+        selected_UPTREND = []
+        selected_ROCKET = []
+        selected_CONNORS = []
+        selected_MORE_5 = []
+        selected_MORE_20 = []
+        selected_LESS_100 = []
+
+        for symbol in symbols:
+            hdf = history.to_dataframe(symbol)
+            sdf = study.to_dataframe(symbol)
+            if hdf is None: continue
+            if sdf is None: continue
+
+            # UPTREND
+            # ma-50 > ma_200
+            # close > ma-50
+            if (
+                    sdf.iloc[-1]['ma_50'] > sdf.iloc[-1]['ma_200'] and
+                    hdf.iloc[-1]['close'] > sdf.iloc[-1]['ma_50']
+            ): selected_UPTREND.append(symbol)
+
+            # ROCKET
+            # 52-wk high or all-time high
+            # ma-50 > ma_200
+            # close > ma-50
+            # volume > 4 * average volume for 60 days
+            if (
+                    len(hdf) > 200 and
+                    hdf.iloc[-1]['close'] > hdf.iloc[-250:-1]['close'].values.max() and
+                    sdf.iloc[-1]['ma_50'] > sdf.iloc[-1]['ma_200'] and
+                    hdf.iloc[-1]['close'] > sdf.iloc[-1]['ma_50'] and
+                    hdf.iloc[-1]['volume'] > 4 * hdf.iloc[-60:-1]['volume'].values.mean()
+            ): selected_ROCKET.append(symbol)
+
+            # CONNORS
+            # available > 200 days
+            # min volume >= 250000 for 21 days
+            # min close >= 5 for 21 days
+            if (
+                    len(hdf) > 200 and
+                    min(hdf.iloc[-21:]['volume'].values) > 250000 and
+                    min(hdf.iloc[-21:]['close'].values) > 5
+            ): selected_CONNORS.append(symbol)
+
+            # MORE_5
+            # close > 5
+            if (
+                    hdf.iloc[-1]['close'] > 5
+            ): selected_MORE_5.append(symbol)
+
+            # MORE_20
+            # close > 20
+            if (
+                    hdf.iloc[-1]['close'] > 20
+            ): selected_MORE_20.append(symbol)
+
+            # LESS_100
+            # close < 100
+            if (
+                    hdf.iloc[-1]['close'] < 100
+            ): selected_LESS_100.append(symbol)
+
+        self.save('UPTREND', selected_UPTREND)
+        self.save('ROCKET', selected_ROCKET)
+        self.save('CONNORS', selected_CONNORS)
+        self.save('MORE_5', selected_MORE_5)
+        self.save('MORE_20', selected_MORE_20)
+        self.save('LESS_100', selected_LESS_100)
+        print('<----- updating selection ...')
 
 class Fundamentals:
     def __init__(self):
@@ -89,6 +178,7 @@ class Fundamentals:
             print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
 
     def update(self):
+        print('-----> updating fundamentals ...')
         reader = iex.DataReader()
         symbols = Symbol().symbols()
         component = {'financials':config.PATH_FINANCIALS,
@@ -105,6 +195,7 @@ class Fundamentals:
             s = json.dumps(data)
             with open(fname, 'w') as f:
                 f.write(s)
+        print('<----- updating fundamentals ...')
 
 class Stock:
     def __init__(self, symbol):
@@ -146,8 +237,19 @@ if __name__ == "__main__":
         symbol = Symbol()
         for selection in ['ALL', 'NYSE', 'AMEX', 'NASDAQ']:
             print('{} : {}'.format(selection.ljust(9), len(symbol.symbols(selection))))
-        symbol.save_selection('AAPL_MSFT', ['AAPL', 'MSFT'])
-        print('{} : {}'.format('AAPL_MSFT', symbol.symbols('AAPL_MSFT')))
+    except:
+        print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
+    print('-' * 80)
+    print('test stock.Selection ...')
+    print('-' * 80)
+    try:
+        selection = Selection()
+        selection.update()
+        for key in ['UPTREND','ROCKET','CONNORS','MORE_5','MORE_20','LESS_100']:
+            selected = selection.select(key)
+            print('{}: {} {} ...'.format(key.ljust(30), len(selected), ' '.join(selected[:10])))
+        selected = selection.select(['UPTREND','MORE_20','LESS_100'])
+        print('{}: {} {} ...'.format('UPTREND & MORE_20 & LESS_100'.ljust(30), len(selected), ' '.join(selected[:10])))
     except:
         print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
     print('-' * 80)

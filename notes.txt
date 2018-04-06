@@ -21,7 +21,7 @@ greeny
 - av.DataReader
 - iex.DataReader
 - daily.History, daily.Study
-- stock.Symbol, stock.Fundamentals, stock.Stock
+- stock.Symbol, stock.Selection, stock.Fundamentals, stock.Stock
 
 - trade.Research
 - app_greeny
