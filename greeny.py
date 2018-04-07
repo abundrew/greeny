@@ -27,8 +27,8 @@ while True:
             history.download(symbols, False)
             history.update(symbols)
             daily.Study().update(symbols)
-            stock.Selection().update()
             stock.Fundamentals().update()
+            stock.Selection().update()
             print(time.strftime('"full daily download and update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
     elif script == 2:
@@ -41,7 +41,6 @@ while True:
             daily.History().update(symbols)
             daily.Study().update(symbols)
             stock.Selection().update()
-            stock.Fundamentals().update()
             print(time.strftime('"full daily update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
     elif script == 3:

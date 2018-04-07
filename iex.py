@@ -2,13 +2,16 @@
 
 import json
 import sys
+import time
 import urllib.request
+import config
 
 class DataReader:
     def __init__(self):
         pass
 
     def _stock_api(self, endpoint):
+        time.sleep(config.IEX_API_DELAY)
         result = {}
         try:
             url = 'https://api.iextrading.com/1.0/' + endpoint

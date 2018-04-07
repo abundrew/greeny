@@ -73,6 +73,7 @@ class Selection:
         symbols = Symbol().symbols()
         history = daily.History()
         study = daily.Study()
+        fundamentals = Fundamentals()
 
         selected_UPTREND = []
         selected_ROCKET = []
@@ -80,19 +81,27 @@ class Selection:
         selected_MORE_5 = []
         selected_MORE_20 = []
         selected_LESS_100 = []
+        selected_LIQUID = []
+        selected_CRSI_5 = []
+        selected_CRSI_10 = []
+        selected_CRSI_20 = []
+        selected_OVERSOLD = []
+        selected_OVERBOUGHT = []
 
         for symbol in symbols:
             hdf = history.to_dataframe(symbol)
             sdf = study.to_dataframe(symbol)
+            stats = fundamentals.stats(symbol)
             if hdf is None: continue
             if sdf is None: continue
+            if stats is None: continue
 
             # UPTREND
-            # ma-50 > ma_200
             # close > ma-50
+            # ma-50 > ma_200
             if (
-                    sdf.iloc[-1]['ma_50'] > sdf.iloc[-1]['ma_200'] and
-                    hdf.iloc[-1]['close'] > sdf.iloc[-1]['ma_50']
+                    hdf.iloc[-1]['close'] > sdf.iloc[-1]['ma_50'] and
+                    sdf.iloc[-1]['ma_50'] > sdf.iloc[-1]['ma_200']
             ): selected_UPTREND.append(symbol)
 
             # ROCKET
@@ -110,7 +119,7 @@ class Selection:
 
             # CONNORS
             # available > 200 days
-            # min volume >= 250000 for 21 days
+            # min volume >= 250K for 21 days
             # min close >= 5 for 21 days
             if (
                     len(hdf) > 200 and
@@ -136,12 +145,57 @@ class Selection:
                     hdf.iloc[-1]['close'] < 100
             ): selected_LESS_100.append(symbol)
 
+            # LIQUID
+            # average volume > 500K for 50 days
+            # market cap > 1B
+            if (
+                    len(hdf) > 50 and
+                    hdf.iloc[-50:-1]['volume'].values.mean() > 500000 and
+                    int(stats['marketcap']) > 1000000000
+            ): selected_LIQUID.append(symbol)
+
+            # CRSI_5
+            # crsi < 5
+            if (
+                    sdf.iloc[-1]['crsi'] < 5
+            ): selected_CRSI_5.append(symbol)
+
+            # CRSI_10
+            # crsi < 10
+            if (
+                    sdf.iloc[-1]['crsi'] < 10
+            ): selected_CRSI_10.append(symbol)
+
+            # CRSI_20
+            # crsi < 20
+            if (
+                    sdf.iloc[-1]['crsi'] < 20
+            ): selected_CRSI_20.append(symbol)
+
+            # OVERSOLD
+            # rsi_14 < 30
+            if (
+                    sdf.iloc[-1]['rsi_14'] < 30
+            ): selected_OVERSOLD.append(symbol)
+
+            # OVERBOUGHT
+            # rsi_14 > 70
+            if (
+                    sdf.iloc[-1]['rsi_14'] > 70
+            ): selected_OVERBOUGHT.append(symbol)
+
         self.save('UPTREND', selected_UPTREND)
         self.save('ROCKET', selected_ROCKET)
         self.save('CONNORS', selected_CONNORS)
         self.save('MORE_5', selected_MORE_5)
         self.save('MORE_20', selected_MORE_20)
         self.save('LESS_100', selected_LESS_100)
+        self.save('LIQUID', selected_LIQUID)
+        self.save('CRSI_5', selected_CRSI_5)
+        self.save('CRSI_10', selected_CRSI_10)
+        self.save('CRSI_20', selected_CRSI_20)
+        self.save('OVERSOLD', selected_OVERSOLD)
+        self.save('OVERBOUGHT', selected_OVERBOUGHT)
         print('<----- updating selection ...')
 
 class Fundamentals:
@@ -195,6 +249,7 @@ class Fundamentals:
             s = json.dumps(data)
             with open(fname, 'w') as f:
                 f.write(s)
+            print(key)
         print('<----- updating fundamentals ...')
 
 class Stock:
@@ -231,28 +286,6 @@ class Stock:
 
 if __name__ == "__main__":
     print('-' * 80)
-    print('test stock.Symbol ...')
-    print('-' * 80)
-    try:
-        symbol = Symbol()
-        for selection in ['ALL', 'NYSE', 'AMEX', 'NASDAQ']:
-            print('{} : {}'.format(selection.ljust(9), len(symbol.symbols(selection))))
-    except:
-        print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
-    print('-' * 80)
-    print('test stock.Selection ...')
-    print('-' * 80)
-    try:
-        selection = Selection()
-        selection.update()
-        for key in ['UPTREND','ROCKET','CONNORS','MORE_5','MORE_20','LESS_100']:
-            selected = selection.select(key)
-            print('{}: {} {} ...'.format(key.ljust(30), len(selected), ' '.join(selected[:10])))
-        selected = selection.select(['UPTREND','MORE_20','LESS_100'])
-        print('{}: {} {} ...'.format('UPTREND & MORE_20 & LESS_100'.ljust(30), len(selected), ' '.join(selected[:10])))
-    except:
-        print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
-    print('-' * 80)
     print('test stock.Fundamentals ...')
     print('-' * 80)
     try:
@@ -270,6 +303,32 @@ if __name__ == "__main__":
         for key in list(stats)[:3]:
             print('{} : {}'.format(key, stats[key]))
         print('...')
+    except:
+        print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
+    print('-' * 80)
+    print('test stock.Symbol ...')
+    print('-' * 80)
+    try:
+        symbol = Symbol()
+        for selection in ['ALL', 'NYSE', 'AMEX', 'NASDAQ']:
+            print('{} : {}'.format(selection.ljust(9), len(symbol.symbols(selection))))
+    except:
+        print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
+    print('-' * 80)
+    print('test stock.Selection ...')
+    print('-' * 80)
+    try:
+        selection = Selection()
+        selection.update()
+        for key in ['UPTREND','ROCKET','CONNORS','MORE_5','MORE_20','LESS_100','LIQUID','CRSI_5','CRSI_10', 'OVERSOLD', 'OVERBOUGHT']:
+            selected = selection.select(key)
+            print('{}: {} {} ...'.format(key.ljust(40), len(selected), ' '.join(selected[:10])))
+        selected = selection.select(['UPTREND','MORE_20','LIQUID'])
+        print('{}: {} {} ...'.format('UPTREND & MORE_20 & LIQUID'.ljust(40), len(selected), ' '.join(selected[:10])))
+        selected = selection.select(['UPTREND','MORE_20','LIQUID','CRSI_20'])
+        print('{}: {} {} ...'.format('UPTREND & MORE_20 & LIQUID & CRSI_20'.ljust(40), len(selected), ' '.join(selected[:10])))
+        selected = selection.select(['UPTREND','MORE_20','LIQUID','OVERSOLD'])
+        print('{}: {} {} ...'.format('UPTREND & MORE_20 & LIQUID & OVERSOLD'.ljust(40), len(selected), ' '.join(selected[:10])))
     except:
         print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
     print('-' * 80)
