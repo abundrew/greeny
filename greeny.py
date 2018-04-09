@@ -9,8 +9,10 @@ while True:
     print('GREENY')
     print('-' * 80)
     print('1 - full daily download and update (once a quarter)')
-    print('2 - full daily update (once a week)')
-    print('3 - selected daily update (daily)')
+    print('2 - fundamentals update (once a quarter)')
+    print('3 - full daily update (once a week)')
+    print('4 - selected daily update (daily)')
+    print('5 - stats')
     print('0 - exit')
     print('=' * 80)
     print('enter choice #', end=':')
@@ -33,6 +35,15 @@ while True:
 
     elif script == 2:
         # ---------------------------------------------------------------------------
+        # fundamentals update (once a quarter)
+        # ---------------------------------------------------------------------------
+        if input('fundamentals update. start? [Y/N]').upper() == 'Y':
+            started = time.time()
+            stock.Fundamentals().update()
+            print(time.strftime('"fundamentals update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
+
+    elif script == 3:
+        # ---------------------------------------------------------------------------
         # full daily update (once a week)
         # ---------------------------------------------------------------------------
         if input('full daily update. start? [Y/N]').upper() == 'Y':
@@ -43,7 +54,7 @@ while True:
             stock.Selection().update()
             print(time.strftime('"full daily update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
-    elif script == 3:
+    elif script == 4:
         # ---------------------------------------------------------------------------
         # selected daily update (daily)
         # ---------------------------------------------------------------------------
@@ -54,6 +65,16 @@ while True:
         daily.Study().update(symbols)
         stock.Selection().update()
         print(time.strftime('"selected daily update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
+
+    elif script == 5:
+        # ---------------------------------------------------------------------------
+        # stats
+        # ---------------------------------------------------------------------------
+        symbol = input('enter symbol:').upper()
+        fundamentals = stock.Fundamentals()
+        stats = fundamentals.stats(symbol)
+        for key in list(stats):
+            print('{} : {}'.format(key, stats[key]))
 
     elif script == 0:
         # ---------------------------------------------------------------------------
