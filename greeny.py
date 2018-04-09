@@ -12,7 +12,8 @@ while True:
     print('2 - fundamentals update (once a quarter)')
     print('3 - full daily update (once a week)')
     print('4 - selected daily update (daily)')
-    print('5 - stats')
+    print('5 - uptrend + more $20 + liquid + crsi < 20')
+    print('6 - stats')
     print('0 - exit')
     print('=' * 80)
     print('enter choice #', end=':')
@@ -67,6 +68,15 @@ while True:
         print(time.strftime('"selected daily update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
     elif script == 5:
+        # ---------------------------------------------------------------------------
+        # uptrend + more $20 + liquid + crsi < 20
+        # ---------------------------------------------------------------------------
+        selected = stock.Selection().select(['UPTREND','MORE_20','LIQUID','CRSI_20'])
+        print('[uptrend + more $20 + liquid + crsi < 20]:')
+        print(len(selected))
+        print(' '.join(selected))
+
+    elif script == 6:
         # ---------------------------------------------------------------------------
         # stats
         # ---------------------------------------------------------------------------
