@@ -282,6 +282,12 @@ class Stock:
     def stats(self):
         return self._stats
 
+def stocks(symbols):
+    stocks = {}
+    for symbol in symbols:
+        stocks[symbol] = Stock(symbol)
+    return stocks
+
 # ----- self-test -------------------------------------------------------------
 
 if __name__ == "__main__":
