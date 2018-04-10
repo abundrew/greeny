@@ -1,8 +1,0 @@
-PATH_STOCKS = '../data/symbols/symbols.csv'
-PATH_FINANCIALS = '../data/fundamentals/financials.json'
-PATH_PEERS = '../data/fundamentals/peers.json'
-PATH_STATS = '../data/fundamentals/stats.json'
-FORMAT_DAILY_HISTORY = '../data/history/daily_{}.csv'
-FORMAT_DAILY_STUDY = '../data/study/study_{}.csv'
-FORMAT_SELECTED = '../data/stock/selected_{}.csv'
-STOCK_A = 'AAPL'
