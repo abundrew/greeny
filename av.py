@@ -31,9 +31,14 @@ class DataReader:
             data = resp.read()
             encoding = resp.info().get_content_charset('utf-8')
             data = json.loads(data.decode(encoding))
-            result['data'] = data
-            result['success'] = True
-            result['error'] = None
+            if 'Information' in data:
+                result['data'] = None
+                result['success'] = False
+                result['error'] = data['Information']
+            else:
+                result['data'] = data
+                result['success'] = True
+                result['error'] = None
         except Exception as e:
             result['data'] = None
             result['success'] = False
@@ -107,7 +112,7 @@ class DataReader:
             data['data'] = df
         return data
 
-    # symbols - up to 100 synbols
+    # symbols - up to 100 symbols
     def batch_stock_quotes(self, symbols):
         payload = {
                 'function':'BATCH_STOCK_QUOTES',
