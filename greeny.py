@@ -2,6 +2,7 @@
 
 import time
 import daily
+import intraday
 import stock
 
 while True:
@@ -11,9 +12,10 @@ while True:
     print('1 - full daily download and update (once a quarter)')
     print('2 - fundamentals update (once a quarter)')
     print('3 - full daily update (once a week)')
-    print('4 - selected daily update (daily)')
-    print('5 - uptrend + more $20 + liquid + crsi < 20')
-    print('6 - stats')
+    print('4 - full intraday update (once a week)')
+    print('5 - selected daily update (daily)')
+    print('6 - uptrend + more $20 + liquid + crsi < 20')
+    print('7 - stats')
     print('0 - exit')
     print('=' * 80)
     print('enter choice #', end=':')
@@ -27,7 +29,7 @@ while True:
             started = time.time()
             history = daily.History()
             symbols = stock.Symbol().symbols()
-            history.download(symbols, False)
+            history.download(symbols) #,true
             history.update(symbols)
             daily.Study().update(symbols)
             stock.Fundamentals().update()
@@ -57,6 +59,18 @@ while True:
 
     elif script == 4:
         # ---------------------------------------------------------------------------
+        # full intraday update (once a week)
+        # ---------------------------------------------------------------------------
+        if input('full intraday update. start? [Y/N]').upper() == 'Y':
+            started = time.time()
+            symbols = stock.Symbol().symbols()
+            history = intraday.History()
+            history.download(symbols)
+            history.update(symbols)
+            print(time.strftime('"full intraday update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
+
+    elif script == 5:
+        # ---------------------------------------------------------------------------
         # selected daily update (daily)
         # ---------------------------------------------------------------------------
         selection = input('enter selection to update:').upper()
@@ -67,7 +81,7 @@ while True:
         stock.Selection().update()
         print(time.strftime('"selected daily update" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
-    elif script == 5:
+    elif script == 6:
         # ---------------------------------------------------------------------------
         # uptrend + more $20 + liquid + crsi < 20
         # ---------------------------------------------------------------------------
@@ -76,7 +90,7 @@ while True:
         print(len(selected))
         print(' '.join(selected))
 
-    elif script == 6:
+    elif script == 7:
         # ---------------------------------------------------------------------------
         # stats
         # ---------------------------------------------------------------------------

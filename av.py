@@ -57,6 +57,19 @@ class DataReader:
         if full:
             payload['outputsize'] = 'full'
         data = self._av_call(payload)
+        if (data['success']):
+            df = pd.DataFrame(data['data']['Time Series ({})'.format(interval)]).T
+            df.index = pd.to_datetime(df.index)
+            df.index.names = ['date']
+            df.rename(
+                    columns={
+                            '1. open':'open',
+                            '2. high':'high',
+                            '3. low':'low',
+                            '4. close':'close',
+                            '5. volume':'volume'
+                            }, inplace=True)
+            data['data'] = df
         return data
 
     # full: full-length, compact: 100 data points
