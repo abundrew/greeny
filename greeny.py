@@ -14,7 +14,7 @@ while True:
     print('3 - full daily update (once a week)')
     print('4 - full intraday update (once a week)')
     print('5 - selected daily update (daily)')
-    print('6 - uptrend + more $20 + liquid + crsi < 20')
+    print('6 - fixed + uptrend + more $20 + liquid + crsi < 20')
     print('7 - stats')
     print('0 - exit')
     print('=' * 80)
@@ -83,10 +83,10 @@ while True:
 
     elif script == 6:
         # ---------------------------------------------------------------------------
-        # uptrend + more $20 + liquid + crsi < 20
+        # fixed + uptrend + more $20 + liquid + crsi < 20
         # ---------------------------------------------------------------------------
-        selected = stock.Selection().select(['UPTREND','MORE_20','LIQUID','CRSI_20'])
-        print('[uptrend + more $20 + liquid + crsi < 20]:')
+        selected = stock.Selection().select(['FIXED','UPTREND','MORE_20','LIQUID','CRSI_20'])
+        print('[fixed + uptrend + more $20 + liquid + crsi < 20]:')
         print(len(selected))
         print(' '.join(selected))
 
