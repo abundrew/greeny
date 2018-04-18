@@ -1,11 +1,18 @@
 import intraday
 import stock
 
-#selection = stock.Selection()
-#selected = selection.select(['UPTREND','MORE_20','LIQUID','CRSI_20'])
-#selection.save('UMLC', selected)
-#print('done...')
+selection = stock.Selection()
+selection.update()
+print('done...')
 
+'''
+selection = stock.Selection()
+selected = selection.select(['UPTREND','MORE_20','LIQUID','CRSI_20'])
+selection.save('UMLC', selected)
+print('done...')
+'''
+
+'''
 history = intraday.History()
 selected_FIXED = []
 for symbol in stock.Symbol().symbols():
@@ -15,3 +22,4 @@ for symbol in stock.Symbol().symbols():
 selection = stock.Selection()
 selection.save("FIXED", selected_FIXED)
 print('done...')
+'''

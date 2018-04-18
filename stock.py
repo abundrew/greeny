@@ -85,6 +85,7 @@ class Selection:
         selected_CRSI_5 = []
         selected_CRSI_10 = []
         selected_CRSI_20 = []
+        selected_CRSI_25 = []
         selected_OVERSOLD = []
         selected_OVERBOUGHT = []
 
@@ -172,6 +173,12 @@ class Selection:
                     sdf.iloc[-1]['crsi'] < 20
             ): selected_CRSI_20.append(symbol)
 
+            # CRSI_25
+            # crsi < 25
+            if (
+                    sdf.iloc[-1]['crsi'] < 25
+            ): selected_CRSI_25.append(symbol)
+
             # OVERSOLD
             # rsi_14 < 30
             if (
@@ -194,6 +201,7 @@ class Selection:
         self.save('CRSI_5', selected_CRSI_5)
         self.save('CRSI_10', selected_CRSI_10)
         self.save('CRSI_20', selected_CRSI_20)
+        self.save('CRSI_25', selected_CRSI_25)
         self.save('OVERSOLD', selected_OVERSOLD)
         self.save('OVERBOUGHT', selected_OVERBOUGHT)
         print('<----- updating selection ...')

@@ -14,8 +14,10 @@ while True:
     print('3 - full daily update (once a week)')
     print('4 - full intraday update (once a week)')
     print('5 - selected daily update (daily)')
-    print('6 - fixed + uptrend + more $20 + liquid + crsi < 20')
-    print('7 - stats')
+    print('6 - fixed + uptrend + more $20 + liquid + crsi < 10')
+    print('7 - fixed + uptrend + more $20 + liquid + crsi < 20')
+    print('8 - fixed + uptrend + more $20 + liquid + crsi < 25')
+    print('9 - stats')
     print('0 - exit')
     print('=' * 80)
     print('enter choice #', end=':')
@@ -83,6 +85,15 @@ while True:
 
     elif script == 6:
         # ---------------------------------------------------------------------------
+        # fixed + uptrend + more $20 + liquid + crsi < 10
+        # ---------------------------------------------------------------------------
+        selected = stock.Selection().select(['FIXED','UPTREND','MORE_20','LIQUID','CRSI_10'])
+        print('[fixed + uptrend + more $20 + liquid + crsi < 10]:')
+        print(len(selected))
+        print(' '.join(selected))
+
+    elif script == 7:
+        # ---------------------------------------------------------------------------
         # fixed + uptrend + more $20 + liquid + crsi < 20
         # ---------------------------------------------------------------------------
         selected = stock.Selection().select(['FIXED','UPTREND','MORE_20','LIQUID','CRSI_20'])
@@ -90,7 +101,16 @@ while True:
         print(len(selected))
         print(' '.join(selected))
 
-    elif script == 7:
+    elif script == 8:
+        # ---------------------------------------------------------------------------
+        # fixed + uptrend + more $20 + liquid + crsi < 25
+        # ---------------------------------------------------------------------------
+        selected = stock.Selection().select(['FIXED','UPTREND','MORE_20','LIQUID','CRSI_25'])
+        print('[fixed + uptrend + more $20 + liquid + crsi < 25]:')
+        print(len(selected))
+        print(' '.join(selected))
+
+    elif script == 9:
         # ---------------------------------------------------------------------------
         # stats
         # ---------------------------------------------------------------------------
