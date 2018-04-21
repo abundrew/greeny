@@ -1,9 +1,18 @@
+import daily
 import intraday
 import stock
 
+
+history = daily.History()
+symbols = stock.Symbol().symbols()
+history.download(symbols)  # ,true
+print('done...')
+
+'''
 selection = stock.Selection()
 selection.update()
 print('done...')
+'''
 
 '''
 selection = stock.Selection()

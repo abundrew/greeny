@@ -77,6 +77,25 @@ class History:
                 print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
         print('<----- updating daily history ...')
 
+    def update_from_file(self, symbols, fname):
+        if not os.path.isfile(fname):
+            print('- file not found -')
+            return
+        with open(fname, 'r') as f:
+            for line in f:
+                parts = line.split(',')
+                symbol = parts[0]
+                if symbol in symbols:
+                    hdf = self.to_dataframe(symbol)
+                    sdate = pd.Timestamp('{}-{}-{}'.format(parts[1][:4], parts[1][4:6], parts[1][6:]))
+                    if not sdate in hdf.index:
+                        try:
+                            hdf.loc[sdate] = [parts[2], parts[3], parts[4], parts[5], parts[6].strip()]
+                            hdf = hdf.sort_index()
+                            hdf.to_csv(config.FORMAT_DAILY_HISTORY.format(symbol))
+                        except:
+                            print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
+
 class Study:
     def __init__(self):
         self._history = History()

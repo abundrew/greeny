@@ -11,37 +11,16 @@ import daily
 class Symbol:
     def __init__(self):
         self._symbols = []
-        self._symbols_nyse = []
-        self._symbols_amex = []
-        self._symbols_nasdaq = []
         with open(config.PATH_SYMBOLS, 'r') as f:
-            reader = csv.reader(f)
-            next(reader)
-            for row in reader:
-                symbol = row[0]
+            for symbol in f.read().splitlines():
                 if '.' in symbol: continue
                 if '-' in symbol: continue
                 self._symbols.append(symbol)
-                if row[7] == 'NYSE':
-                    self._symbols_nyse.append(symbol)
-                elif row[7] == 'AMEX':
-                    self._symbols_amex.append(symbol)
-                elif row[7] == 'NASDAQ':
-                    self._symbols_nasdaq.append(symbol)
         self._symbols.sort()
-        self._symbols_nyse.sort()
-        self._symbols_amex.sort()
-        self._symbols_nasdaq.sort()
 
     def symbols(self, selection='ALL'):
         if selection == 'ALL':
             return self._symbols[:]
-        elif selection == 'NYSE':
-            return self._symbols_nyse[:]
-        elif selection == 'AMEX':
-            return self._symbols_amex[:]
-        elif selection == 'NASDAQ':
-            return self._symbols_nasdaq[:]
         else:
             return Selection().select(selection)
 
