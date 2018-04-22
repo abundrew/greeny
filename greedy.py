@@ -114,27 +114,44 @@ while True:
             # uptrend + more $20 + liquid + crsi < 10
             # ---------------------------------------------------------------------------
             selected = stock.Selection().select(['UPTREND','MORE_20','LIQUID','CRSI_10'])
-            print('[uptrend + more $20 + liquid + crsi < 10]:')
-            print(len(selected))
-            print(' '.join(selected))
 
         elif choice == 2:
             # ---------------------------------------------------------------------------
             # uptrend + more $20 + liquid + crsi < 20
             # ---------------------------------------------------------------------------
             selected = stock.Selection().select(['UPTREND','MORE_20','LIQUID','CRSI_20'])
-            print('[uptrend + more $20 + liquid + crsi < 20]:')
-            print(len(selected))
-            print(' '.join(selected))
 
         elif choice == 3:
             # ---------------------------------------------------------------------------
             # uptrend + more $20 + liquid + crsi < 25
             # ---------------------------------------------------------------------------
             selected = stock.Selection().select(['UPTREND','MORE_20','LIQUID','CRSI_25'])
-            print('[uptrend + more $20 + liquid + crsi < 25]:')
-            print(len(selected))
-            print(' '.join(selected))
+
+        else:
+            continue
+
+        history = daily.History()
+        study = daily.Study()
+        fundamentals = stock.Fundamentals()
+        print('stock    close   w52low  w52high  crsi   p/s   p/b company')
+        print('{} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
+        for symbol in selected:
+            hdf = history.to_dataframe(symbol)
+            sdf = study.to_dataframe(symbol)
+            stats = fundamentals.stats(symbol)
+            try:
+                print('{:5} {:8.2f} {:8.2f} {:8.2f} {:5.1f} {:5.1f} {:5.1f} {}'.format(
+                    symbol,
+                    hdf.iloc[-1]['close'],
+                    stats['week52low'],
+                    stats['week52high'],
+                    sdf.iloc[-1]['crsi'],
+                    stats['priceToSales'],
+                    stats['priceToBook'],
+                    stats['companyName'][:20]
+                ))
+            except:
+                pass
 
     elif script == 8:
         # ---------------------------------------------------------------------------

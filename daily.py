@@ -116,23 +116,23 @@ class Study:
             fname = config.FORMAT_DAILY_STUDY.format(symbol)
             print(symbol)
             try:
-                df = self._history.to_dataframe(symbol)
-                if df is None: continue
-                adx_10 = pd.Series(calcs.ADX(df['high'].values, df['low'].values, df['close'].values, 10),
-                                   index=df['high'].index).round(2)
-                bb_mean = df['close'].rolling(20).mean().round(2)
-                bb_std = df['close'].rolling(20).std().round(2)
-                crsi = pd.Series(calcs.Connors_RSI(df['close'].values, 3, 2, 100), index=df['close'].index).round(2)
-                ma_200 = df['close'].rolling(200).mean().round(2)
-                ma_50 = df['close'].rolling(50).mean().round(2)
-                rsi_14 = pd.Series(calcs.RSI(df['close'].values, 14), index=df['close'].index).round(2)
+                hdf = self._history.to_dataframe(symbol)
+                if hdf is None: continue
+                adx_10 = pd.Series(calcs.ADX(hdf['high'].values, hdf['low'].values, hdf['close'].values, 10),
+                                   index=hdf['high'].index).round(2)
+                bb_mean = hdf['close'].rolling(20).mean().round(2)
+                bb_std = hdf['close'].rolling(20).std().round(2)
+                crsi = pd.Series(calcs.Connors_RSI(hdf['close'].values, 3, 2, 100), index=hdf['close'].index).round(2)
+                ma_200 = hdf['close'].rolling(200).mean().round(2)
+                ma_50 = hdf['close'].rolling(50).mean().round(2)
+                rsi_14 = pd.Series(calcs.RSI(hdf['close'].values, 14), index=hdf['close'].index).round(2)
                 df_study = pd.DataFrame(data={'adx_10': adx_10,
                                               'bb_mean': bb_mean,
                                               'bb_std': bb_std,
                                               'crsi': crsi,
                                               'ma_200': ma_200,
                                               'ma_50': ma_50,
-                                              'rsi_14': rsi_14}, index=df.index)
+                                              'rsi_14': rsi_14}, index=hdf.index)
                 df_study.to_csv(fname)
             except KeyboardInterrupt:
                 print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
