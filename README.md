@@ -1,4 +1,4 @@
-﻿﻿# Greeny-Greedy
+# Greeny-Greedy
 
 Python scripts for technical analysis.
 
