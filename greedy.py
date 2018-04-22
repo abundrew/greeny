@@ -133,14 +133,14 @@ while True:
         history = daily.History()
         study = daily.Study()
         fundamentals = stock.Fundamentals()
-        print('stock    close   w52low  w52high  crsi   p/s   p/b company')
-        print('{} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
+        print('stock    close   w52low  w52high  crsi   p/s   p/b   d/e company')
+        print('{} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
         for symbol in selected:
             hdf = history.to_dataframe(symbol)
             sdf = study.to_dataframe(symbol)
             stats = fundamentals.stats(symbol)
             try:
-                print('{:5} {:8.2f} {:8.2f} {:8.2f} {:5.1f} {:5.1f} {:5.1f} {}'.format(
+                print('{:5} {:8.2f} {:8.2f} {:8.2f} {:5.1f} {:5.1f} {:5.1f} {:5.1f} {}'.format(
                     symbol,
                     hdf.iloc[-1]['close'],
                     stats['week52low'],
@@ -148,6 +148,7 @@ while True:
                     sdf.iloc[-1]['crsi'],
                     stats['priceToSales'],
                     stats['priceToBook'],
+                    stats['debt'] / stats['EBITDA'],
                     stats['companyName'][:20]
                 ))
             except:
