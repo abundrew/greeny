@@ -133,6 +133,7 @@ while True:
         history = daily.History()
         study = daily.Study()
         fundamentals = stock.Fundamentals()
+        print('{} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
         print('stock    close   w52low  w52high  crsi   p/s   p/b   d/e company')
         print('{} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
         for symbol in selected:
@@ -153,6 +154,7 @@ while True:
                 ))
             except:
                 pass
+        print('{} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
 
     elif script == 8:
         # ---------------------------------------------------------------------------
