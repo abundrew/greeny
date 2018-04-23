@@ -133,16 +133,19 @@ while True:
         history = daily.History()
         study = daily.Study()
         fundamentals = stock.Fundamentals()
-        print('{} {} {} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
-        print('stock    close   w52low  w52high   vol(M)   cap(B)  crsi   p/s   p/b   d/e company')
-        print('{} {} {} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
+        print('{} {} {} {} {} {} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 6, '-' * 6, '-' * 6, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
+        print('stock +/-(%) +/-(%) +/-(%)    close   w52low  w52high   vol(M)   cap(B)  crsi   p/s   p/b   d/e company')
+        print('{} {} {} {} {} {} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 6, '-' * 6, '-' * 6, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
         for symbol in selected:
             hdf = history.to_dataframe(symbol)
             sdf = study.to_dataframe(symbol)
             stats = fundamentals.stats(symbol)
             try:
-                print('{:5} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:5.1f} {:5.1f} {:5.1f} {:5.1f} {}'.format(
+                print('{:5} {:6.2f} {:6.2f} {:6.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:8.2f} {:5.1f} {:5.1f} {:5.1f} {:5.1f} {}'.format(
                     symbol,
+                    ((hdf.iloc[-3]['close'] - hdf.iloc[-4]['close']) / hdf.iloc[-4]['close']) * 100,
+                    ((hdf.iloc[-2]['close'] - hdf.iloc[-3]['close']) / hdf.iloc[-3]['close']) * 100,
+                    ((hdf.iloc[-1]['close'] - hdf.iloc[-2]['close']) / hdf.iloc[-2]['close']) * 100,
                     hdf.iloc[-1]['close'],
                     stats['week52low'],
                     stats['week52high'],
@@ -156,7 +159,7 @@ while True:
                 ))
             except:
                 pass
-        print('{} {} {} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
+        print('{} {} {} {} {} {} {} {} {} {} {} {} {} {}'.format('-' * 5, '-' * 6, '-' * 6, '-' * 6, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 8, '-' * 5, '-' * 5, '-' * 5, '-' * 5, '-' * 20))
 
     elif script == 8:
         # ---------------------------------------------------------------------------
