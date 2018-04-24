@@ -10,10 +10,15 @@ print('done...')
 
 '''
 selection = stock.Selection()
+selected = selection.select(['FIXED','UPTREND'])
+selection.save('FIXED_UPTREND', selected)
+print('done...')
+'''
+'''
+selection = stock.Selection()
 selection.update()
 print('done...')
 '''
-
 '''
 selection = stock.Selection()
 selected = selection.select(['UPTREND','MORE_20','LIQUID','CRSI_20'])
