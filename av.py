@@ -22,6 +22,7 @@ class DataReader:
             payload['apikey'] = config.AV_API_KEY
             url = 'https://www.alphavantage.co/query?{}'
             url = url.format(urlencode(payload, quote_via=quote_plus))
+            print(url)
             headers = {}
             headers['User-Agent'] = ("Mozilla/5.0 (X11; Linux i686) "
                                      "AppleWebKit/537.17 (KHTML, like Gecko) "
@@ -58,18 +59,24 @@ class DataReader:
             payload['outputsize'] = 'full'
         data = self._av_call(payload)
         if (data['success']):
-            df = pd.DataFrame(data['data']['Time Series ({})'.format(interval)]).T
-            df.index = pd.to_datetime(df.index)
-            df.index.names = ['date']
-            df.rename(
-                    columns={
-                            '1. open':'open',
-                            '2. high':'high',
-                            '3. low':'low',
-                            '4. close':'close',
-                            '5. volume':'volume'
-                            }, inplace=True)
-            data['data'] = df
+            raw_data = data['data']
+            try:
+                df = pd.DataFrame(data['data']['Time Series ({})'.format(interval)]).T
+                df.index = pd.to_datetime(df.index)
+                df.index.names = ['date']
+                df.rename(
+                        columns={
+                                '1. open':'open',
+                                '2. high':'high',
+                                '3. low':'low',
+                                '4. close':'close',
+                                '5. volume':'volume'
+                                }, inplace=True)
+                data['data'] = df
+            except:
+                print("ERROR: {} {}".format(sys.exc_info()[0], sys.exc_info()[1]))
+                print(raw_data)
+                data = None
         return data
 
     # full: full-length, compact: 100 data points

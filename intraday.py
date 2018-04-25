@@ -30,7 +30,7 @@ class History:
             print(symbol)
             try:
                 data = self._reader.time_series_intraday(symbol, '30min', True)
-                if (data['success']):
+                if (data['success'] and data['data'] is not None):
                     df = data['data']
                     df.to_csv(fname)
             except KeyboardInterrupt:
@@ -65,6 +65,8 @@ class History:
                 data = self._reader.time_series_intraday(symbol, '30min')
                 if not data['success']:
                     print('ERROR: {}'.format(data['error']))
+                    continue
+                if data['data'] is None:
                     continue
                 df_update = data['data']
                 df_new = pd.concat([df, df_update[last_date:].iloc[1:]]).drop_duplicates()
