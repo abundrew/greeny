@@ -2,8 +2,10 @@
 
 import time
 import pandas as pd
+import os
 import config
 import daily
+import intraday
 import stock
 
 while True:
@@ -13,11 +15,13 @@ while True:
     print('1 - help')
     print('2 - update fundamentals (once in a while)')
     print('3 - download missing daily files')
-    print('4 - update daily files (with US Equities file)')
+    print('4 - update daily files (with US Equities files)')
     print('5 - update studies')
     print('6 - update selections')
     print('7 - get cross-selection')
     print('8 - get stats')
+    print('9 - update intraday files (once a week)')
+    print('10 - update symbols (with US Equities files)')
     print('0 - exit')
     print('=' * 80)
     print('enter choice #', end=':')
@@ -173,6 +177,54 @@ while True:
         stats = fundamentals.stats(symbol)
         for key in list(stats):
             print('{} : {}'.format(key, stats[key]))
+
+    elif script == 9:
+        # ---------------------------------------------------------------------------
+        # update intraday files (once a week)
+        # ---------------------------------------------------------------------------
+        if input('update intraday files. start? [Y/N]').upper() == 'Y':
+            started = time.time()
+            history = intraday.History()
+            symbols = stock.Symbol().symbols()
+            history.download(symbols)
+            #history.update(symbols)
+            print(time.strftime('"update intraday files" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
+
+    elif script == 10:
+        # ---------------------------------------------------------------------------
+        # update symbols (with US Equities files)
+        # ---------------------------------------------------------------------------
+        if input('update symbols (with US Equities files). start? [Y/N]').upper() == 'Y':
+            print('start date [YYYY-MM-DD]', end=':')
+            start_date = input()
+            print('end date [YYYY-MM-DD]', end=':')
+            end_date = input()
+            started = time.time()
+            symbols = set([])
+            for di in pd.date_range(start_date, end_date):
+                eoddate = str(di)[:10]
+                print(eoddate)
+                selected = set([])
+                fname = config.FORMAT_DAILY_EODDATA.format(eoddate[:4] + eoddate[5:7] + eoddate[8:])
+                if not os.path.isfile(fname):
+                    print('- file not found -')
+                    continue
+                with open(fname, 'r') as f:
+                    for line in f:
+                        parts = line.split(',')
+                        symbol = parts[0]
+                        if '.' in symbol: continue
+                        if '-' in symbol: continue
+                        if len(symbols) == 0 or symbol in symbols:
+                            selected.add(symbol)
+                symbols = selected
+            symbols = list(symbols)
+            symbols.sort()
+            with open(config.PATH_SYMBOLS, 'w') as f:
+                for symbol in symbols:
+                    f.write(symbol + '\n')
+
+            print(time.strftime('"update symbols (with US Equities files)" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
     elif script == 0:
         # ---------------------------------------------------------------------------
