@@ -187,7 +187,7 @@ while True:
             history = intraday.History()
             symbols = stock.Symbol().symbols()
             history.download(symbols)
-            #history.update(symbols)
+            history.update(symbols)
             print(time.strftime('"update intraday files" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
     elif script == 10:

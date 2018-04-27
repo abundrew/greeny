@@ -22,7 +22,7 @@ class DataReader:
             payload['apikey'] = config.AV_API_KEY
             url = 'https://www.alphavantage.co/query?{}'
             url = url.format(urlencode(payload, quote_via=quote_plus))
-            print(url)
+            #print(url)
             headers = {}
             headers['User-Agent'] = ("Mozilla/5.0 (X11; Linux i686) "
                                      "AppleWebKit/537.17 (KHTML, like Gecko) "
