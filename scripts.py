@@ -2,12 +2,25 @@ import daily
 import intraday
 import stock
 
+history = intraday.History()
+symbols = stock.Symbol().symbols()
+counts = dict()
+for symbol in symbols:
+    hdf = history.to_dataframe(symbol)
+    if hdf is None: continue
+    cnt = len(hdf)
+    if not cnt in counts:
+        counts[cnt] = 0
+    counts[cnt] += 1
+for key in counts:
+    print('{}: {}'.format(key, counts[key]))
 
+'''
 history = daily.History()
 symbols = stock.Symbol().symbols()
 history.download(symbols)  # ,true
 print('done...')
-
+'''
 '''
 selection = stock.Selection()
 selected = selection.select(['FIXED','UPTREND'])
