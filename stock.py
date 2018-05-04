@@ -80,6 +80,7 @@ class Selection:
             # close > ma-50
             # ma-50 > ma_200
             if (
+                    len(hdf) > 200 and
                     hdf.iloc[-1]['close'] > sdf.iloc[-1]['ma_50'] and
                     sdf.iloc[-1]['ma_50'] > sdf.iloc[-1]['ma_200']
             ): selected_UPTREND.append(symbol)
