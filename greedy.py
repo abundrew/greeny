@@ -224,6 +224,7 @@ while True:
                 for symbol in symbols:
                     f.write(symbol + '\n')
 
+            print("symbols # {}".format(len(symbols)))
             print(time.strftime('"update symbols (with US Equities files)" finished in %H:%M:%S ', time.gmtime(time.time() - started)))
 
     elif script == 0:
